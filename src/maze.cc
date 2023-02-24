@@ -12,7 +12,7 @@ std::vector<T> parse_stream(std::istream &stream) {
     return v;
 }
 
-int main(int argc, char* argv[]) {
+int main() {
     std::ifstream input("file.txt");
     std::vector<int> v = parse_stream<int>(input);
     std::cout << ' ';
