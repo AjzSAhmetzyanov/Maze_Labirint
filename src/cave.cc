@@ -1,38 +1,8 @@
-//#include <iterator>
-//#include <algorithm>
-//#include <vector>
-//#include <iostream>
-//#include <fstream>
-//
-//template<typename T>
-//std::vector<T> parse_stream(std::istream &stream) {
-//    std::vector<T> v;
-//    std::istream_iterator<T> input(stream);
-//    std::copy(input, std::istream_iterator<T>(), std::back_inserter(v));
-//    return v;
-//}
-//
-//int main() {
-//    std::ifstream input("file.txt");
-//
-//    std::vector<int> v = parse_stream<int>(input);
-//
-//    std::vector< int > tmp(v[1]);
-//    std::vector<std::vector<int>> vv(v[0]);
-//
-//    for (int i = 2; i < v.size(); i++) {
-//        vv[(i-2)/v[0]].push_back(v[i]);
-//    }
-//
-//    int count = 0;
-//    for (const auto & row : vv) {
-//        for (int elem : row) {
-//            if (elem == 1) {
-//                count++;
-//            }
-//
+#include <iterator>
+#include <algorithm>
+#include <vector>
 #include <iostream>
-#include <random>
+#include <fstream>
 
 #ifdef _WIN32
     #include <windows.h>
@@ -42,224 +12,121 @@
     #define msleep(x) usleep(x * 1000)
 #endif
 
+#define LIFE_ 4
+#define DEATH_ 3
 
-using std::cout;
-using std::cin;
-using std::cerr;
-using std::endl;
+template<typename T>
+std::vector<T> parse_stream(std::istream &stream) {
+    std::vector<T> v;
+    std::istream_iterator<T> input(stream);
+    std::copy(input, std::istream_iterator<T>(), std::back_inserter(v));
+    return v;
+}
 
+std::vector<std::vector<int>> init_vector() {
+    std::ifstream input("file.txt");
 
-/* Ширина игрового поля */
-#define __WORLD_HEIGHT__ 20
+    std::vector<int> v = parse_stream<int>(input);
 
-/* Высота игрового поля */
-#define __WORLD_WIDTH__ 20
+    std::vector< int > tmp(v[1]);
+    std::vector<std::vector<int>> vv(v[0]);
 
-
-struct point {
-    unsigned is_live:1;
-};
-
-
-/*
- * Инициализация первого поколения игры псевдослучайными значениями
- */
-void init_world(point world[][__WORLD_HEIGHT__])
-{
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(1, 10000);
-
-    unsigned int i, j;
-
-    for (i = 0; i < __WORLD_WIDTH__; i++) {
-        for (j = 0; j < __WORLD_HEIGHT__; j++) {
-            unsigned int num = dis(gen);
-            if (num % 2 == 0) {
-                world[i][j].is_live = 1;
-            } else {
-                world[i][j].is_live = 0;
-            }
-        }
+    for (int i = 2; i < v.size(); i++) {
+        vv[(i-2)/v[0]].push_back(v[i]);
     }
+    input.close();
+    return vv;
 }
 
 
-/*
- * Вывести на экран игровое поле
-*/
-void print_world(point world[][__WORLD_HEIGHT__])
-{
-    unsigned int i, j;
-    for (i = 0; i < __WORLD_WIDTH__; i++) {
-        for (j = 0; j < __WORLD_HEIGHT__; j++) {
-            if (world[i][j].is_live == 1) {
-                cout << '*';
-            } else {
-                cout << ' ';
-            }
-            cout << ' ';
-        }
-        cout << endl;
-    }
+int get_size() {
+    std::ifstream input("file.txt");
+    std::vector<int> vv = parse_stream<int>(input);
+    input.close();
+    return vv[0];
 }
-/*
- * Количество живых клеток на игровом поле
-*/
-unsigned int get_live_count(point world[][__WORLD_HEIGHT__])
-{
-    unsigned int count = 0;
-    unsigned i, j;
-    for (i = 0; i < __WORLD_WIDTH__; i++) {
-        for (j = 0; j < __WORLD_HEIGHT__; j++) {
-            if (world[i][j].is_live == 1) {
-                count++;
-            }
+
+void print_world(std::vector<std::vector<int>> vec) {
+     for (int i = 0; i < get_size(); i++) {
+        for (int j = 0; j < get_size(); j++) {
+            std::cout << vec[i][j] << ' ';
+        }
+        std::cout << std::endl;
+    }
+     std::cout << std::endl;
+}
+
+int get_live_count(std::vector<std::vector<int>> vv) {
+    int count = 0;
+    for (int i = 0; i < get_size(); i++) {
+        for (int j = 0; j < get_size(); j++) {
+            if (vv[i][j] == 1) count++;
         }
     }
     return count;
 }
 
-
-/*
- * Получение координат соседей точки (окрестность мура 1 порядка)
-*/
-void read_point_neighbors(signed int nb[][2], unsigned int x, unsigned int y)
-{
-    unsigned int i, j;
-    unsigned int k = 0;
-
-    for (i = x - 1; i <= x + 1; i++) {
-        for (j = y - 1; j <= y + 1; j++) {
-            if (i == x && j == y) {
-                continue;
-            }
-            nb[k][0] = i;
-            nb[k][1] = j;
-            k++;
+int count_live_neighbors(std::vector<std::vector<int>> vv, int i, int j) {
+    int count = 0;
+    if (!((i-1) < 0) && !((i-1) > get_size()-1) && !((j-1) < 0) && !((j-1) >get_size()-1)) {
+        if (vv[i-1][j-1] == 1) count++;
         }
+    if (!(i < 0) && !(i > get_size()-1) && !((j-1) < 0) && !((j-1) >get_size()-1)) {
+        if (vv[i][j-1] == 1) count++;
+        }
+    if (!((i+1) < 0) && !((i+1) > get_size()-1) && !((j-1) < 0) && !((j-1) >get_size()-1)) {
+        if (vv[i+1][j-1] == 1) count++;
+        }
+    if (!((i-1) < 0) && !((i-1) > get_size()-1) && !(j < 0) && !(j >get_size()-1)) {
+        if (vv[i-1][j] == 1) count++;
+        }
+    if (!((i+1) < 0) && !((i+1) > get_size()-1) && !(j < 0) && !(j >get_size()-1)) {
+        if (vv[i+1][j] == 1) count++;
+        }
+    if (!((i-1) < 0) && !((i-1) > get_size()-1) && !((j+1) < 0) && !((j+1) >get_size()-1)) {
+        if (vv[i-1][j+1] == 1) count++;
+        }
+    if (!((i) < 0) && !((i) > get_size()-1) && !((j+1) < 0) && !((j+1) >get_size()-1)) {
+        if (vv[i][j+1] == 1) count++;
+        }
+    if (!((i+1) < 0) && !((i+1) > get_size()-1) && !((j+1) < 0) && !((j+1) >get_size()-1)) {
+        if (vv[i+1][j+1] == 1) count++;
     }
-}
-
-
-/*
- * Количество живых соседей у клетки с координатами x, y
- */
-unsigned int count_live_neighbors(point world[][__WORLD_HEIGHT__], unsigned int x, unsigned int y)
-{
-    unsigned int count = 0;
-    unsigned int i;
-    signed int nb[8][2];
-    signed int _x, _y;
-
-    read_point_neighbors(nb, x, y);
-
-    for (i = 0; i < 8; i++) {
-        _x = nb[i][0];
-        _y = nb[i][1];
-
-        if (_x < 0 || _y < 0) {
-            continue;
-        }
-        if (_x >= __WORLD_WIDTH__ || _y >= __WORLD_HEIGHT__) {
-            continue;
-        }
-
-        if (world[_x][_y].is_live == 1) {
-            count++;
-        }
-    }
-
     return count;
 }
 
 
-/*
- * Сгенерировать следующее поколение игрового мира
- */
-void next_generation(point world[][__WORLD_HEIGHT__], point prev_world[][__WORLD_HEIGHT__])
-{
-    unsigned int i, j;
-    unsigned int live_nb;
-    point p;
 
-    for (i = 0; i < __WORLD_WIDTH__; i++) {
-        for (j = 0; j < __WORLD_HEIGHT__; j++) {
-            p = prev_world[i][j];
-            live_nb = count_live_neighbors(prev_world, i, j);
-
-            if (p.is_live == 0) {
-                if (live_nb == 3) {
-                    world[i][j].is_live = 1;
-                }
-            } else {
-                if (live_nb < 2 || live_nb > 3) {
-                    world[i][j].is_live = 0;
+std::vector<std::vector<int>> check_neighbors(std::vector<std::vector<int>> vv) {
+     for (int i = 0; i < get_size(); i++) {
+        for (int j = 0; j < get_size(); j++) {
+            if (vv[i][j] == 1) {
+                if (count_live_neighbors(vv, i, j) < DEATH_) {
+                    vv[i][j] = 0;
+                    }
+                 }
+            if (vv[i][j] == 0) {
+                if (count_live_neighbors(vv, i, j) > LIFE_) {
+                    vv[i][j] = 1;
+                        }
+                    }
                 }
             }
-        }
-    }
+     return vv;
 }
 
 
-/*
- * Копирование игрового мира. Используется для сохранения предыдущего поколения
-*/
-void copy_world(point src[][__WORLD_HEIGHT__], point dest[][__WORLD_HEIGHT__])
-{
-    unsigned int i, j;
-    for (i = 0; i < __WORLD_WIDTH__; i++) {
-        for (j = 0; j < __WORLD_HEIGHT__; j++) {
-            dest[i][j] = src[i][j];
-        }
-    }
-}
-
-
-/*
- * Сравнение игровых миров текущего и предыдущего поколения
- */
-int cmp_world(point w1[][__WORLD_HEIGHT__], point w2[][__WORLD_HEIGHT__])
-{
-    unsigned int i, j;
-    for (i = 0; i < __WORLD_WIDTH__; i++) {
-        for (j = 0; j < __WORLD_HEIGHT__; j++) {
-            if (w1[i][j].is_live != w2[i][j].is_live) {
-                return -1;
-            }
-        }
-    }
-    return 0;
-}
-
-
-int main()
-{
-    point world[__WORLD_WIDTH__][__WORLD_HEIGHT__];
-    point prev_world[__WORLD_WIDTH__][__WORLD_HEIGHT__];
-
-    init_world(world);
-    unsigned int live_points = -1;
+int main() {
+    int count = 0;
     bool is_optimal = false;
-
+    std::vector<std::vector<int>> v1 = init_vector();
+    std::vector<std::vector<int>> temp = v1;
     do {
-        print_world(world);
-        copy_world(world, prev_world);
-        next_generation(world, prev_world);
-
-        is_optimal = cmp_world(world, prev_world) == 0;
-        live_points = get_live_count(world);
-
-        if (is_optimal) {
-            cout << "Optimal configuration detected" << endl;
-        }
-
-        if (live_points == 0) {
-            cout << "All points died" << endl;
-        }
-        msleep(1000);
-    } while (live_points != 0 && !is_optimal);
-
-    return 0;
+        std::vector<std::vector<int>> v2 = check_neighbors(temp);
+        count = get_live_count(v2);
+        is_optimal = (temp == v2);
+        print_world(v2);
+        msleep(500);
+    } while(!is_optimal && (count != 0));
+return 0;
 }
-
