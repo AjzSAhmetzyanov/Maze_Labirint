@@ -24,7 +24,7 @@ namespace s21 {
         bool end_gen_ = false;
         std::string path_to_file_ = "";
 
-    public:
+    private:
         int get_size(std::string path_to_file);
         void print_world();
         int get_live_count(std::vector<std::vector<int>> vv);

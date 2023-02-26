@@ -30,8 +30,8 @@ Cave::Cave(std::string path_to_file, int birth_limits, int death_limits) {
 }
 
 void Cave::print_world() {
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 0; j < rows_; j++) {
             std::cout << old_cave[i][j] << ' ';
         }
         std::cout << std::endl;
@@ -67,25 +67,24 @@ void Cave::next_generation(std::vector<std::vector<int>> &v1, std::vector<std::v
         for (int j = 0; j < rows_; j++) {
             if (v1[i][j] == 1) {
                 if (count_live_neighbors(v1, i, j) < death_limits_) {
-                    v2[i][j] = 0;
+                        v2[i][j] = 0;
                     } else {
-                    v2[i][j] = 1;
-                }
+                        v2[i][j] = 1;
+                    }
                  } else {
                     if (count_live_neighbors(v1, i, j) > birth_limits_) {
-                    v2[i][j] = 1;
-                        } else {
+                        v2[i][j] = 1;
+                    } else {
                         v2[i][j] = 0;
-                    }
-                }
+                 }
             }
         }
+    }
 }
 
 bool Cave::get_end_gen() {
     return end_gen_;
 }
-
 
 void Cave::update_cave() {
     if (!end_gen_) {
