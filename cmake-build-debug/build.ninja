@@ -72,8 +72,14 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 
 build cmake_object_order_depends_target_Maze_Labirint: phony || CMakeFiles/Maze_Labirint.dir
 
-build CMakeFiles/Maze_Labirint.dir/src/test.cc.o: CXX_COMPILER__Maze_Labirint_Debug /Users/luigiket/github/Maze_Labirint/src/test.cc || cmake_object_order_depends_target_Maze_Labirint
-  DEP_FILE = CMakeFiles/Maze_Labirint.dir/src/test.cc.o.d
+build CMakeFiles/Maze_Labirint.dir/src/cave.cc.o: CXX_COMPILER__Maze_Labirint_Debug /Users/luigiket/github/Maze_Labirint/src/cave.cc || cmake_object_order_depends_target_Maze_Labirint
+  DEP_FILE = CMakeFiles/Maze_Labirint.dir/src/cave.cc.o.d
+  FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.6 -std=gnu++14
+  OBJECT_DIR = CMakeFiles/Maze_Labirint.dir
+  OBJECT_FILE_DIR = CMakeFiles/Maze_Labirint.dir/src
+
+build CMakeFiles/Maze_Labirint.dir/src/s21_cave.cc.o: CXX_COMPILER__Maze_Labirint_Debug /Users/luigiket/github/Maze_Labirint/src/s21_cave.cc || cmake_object_order_depends_target_Maze_Labirint
+  DEP_FILE = CMakeFiles/Maze_Labirint.dir/src/s21_cave.cc.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.6 -std=gnu++14
   OBJECT_DIR = CMakeFiles/Maze_Labirint.dir
   OBJECT_FILE_DIR = CMakeFiles/Maze_Labirint.dir/src
@@ -86,7 +92,7 @@ build CMakeFiles/Maze_Labirint.dir/src/test.cc.o: CXX_COMPILER__Maze_Labirint_De
 #############################################
 # Link the executable Maze_Labirint
 
-build Maze_Labirint: CXX_EXECUTABLE_LINKER__Maze_Labirint_Debug CMakeFiles/Maze_Labirint.dir/src/test.cc.o
+build Maze_Labirint: CXX_EXECUTABLE_LINKER__Maze_Labirint_Debug CMakeFiles/Maze_Labirint.dir/src/cave.cc.o CMakeFiles/Maze_Labirint.dir/src/s21_cave.cc.o
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.6
   OBJECT_DIR = CMakeFiles/Maze_Labirint.dir
   POST_BUILD = :

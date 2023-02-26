@@ -1,3 +1,8 @@
 # ninja log v5
 0	1220	1677235404000000000	CMakeFiles/Maze_Labirint.dir/src/test.cc.o	36fcd5eca09affac
-1221	1268	1677235404000000000	Maze_Labirint	dfd96d7ccbff151b
+0	50	1677402263000000000	build.ninja	1ffbe50999b187a4
+0	1270	1677253470000000000	CMakeFiles/Maze_Labirint.dir/src/maze.cc.o	f61d30fd0c12043c
+604	652	1677402094000000000	Maze_Labirint	f1cb0a949d97155f
+2	776	1677401950000000000	CMakeFiles/Maze_Labirint.dir/src/s21_cave.cc.o	8c102648e4c0fa71
+2	604	1677402094000000000	CMakeFiles/Maze_Labirint.dir/src/cave.cc.o	5ef4ff0f4aa65c05
+0	56	1677402263000000000	build.ninja	1ffbe50999b187a4

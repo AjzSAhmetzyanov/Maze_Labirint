@@ -4,5 +4,6 @@ project(Maze_Labirint)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(Maze_Labirint
-        src/test.cc
-        src/file.txt)
+        src/file.txt
+        src/cave.cc
+        src/s21_cave.cc)
